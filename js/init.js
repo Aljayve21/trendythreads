@@ -5,6 +5,7 @@ $(function () {
     loadScript('js/categories.js', categoriesSetup);
     loadScript('js/products.js', productsSetup);
     loadScript('js/user.js', userInfo);
+    loadScript('js/cart.js', cartInfo);
 });
 
 $.get('/templates/navigation.html', function (data){
@@ -62,6 +63,18 @@ var userInfo = function() {
         user.getAccountInfo(userAccount);
     }
 };
+
+var cartInfo = function() {
+    let cart = new Cart();
+    if(localStorage.getItem("user") != null){
+        var user = JSON.parse(localStorage.user);
+        cart.getCart(user.id);
+        if(localStorage.getItem("cartCount") != 0) {
+            var cartItems = JSON.parse(localStorage.getItem("cart"));
+            cart.getCartDisplay(cartItems);
+        }
+    }
+}
 
 function loadScript (url, callback) {
     var head = document.head;
