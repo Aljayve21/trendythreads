@@ -4,15 +4,16 @@ class Cart {
     }
 
     getCart(userID) {
-        var apiUrl = this.apiUrl;
-        var carts = [];
-        var count = 0;
+        var i = 0;
+		var apiUrl = this.apiUrl;
+		var count = 0;
+		var carts = [];
         $.ajax({
             type: "GET",
             url: apiUrl + "carts/user/" + userID,
             success: function(data) {
                 $(data).each(function (index, cart) {
-                    console.log(cart);
+                    var carts = [];
                      count += cart.products.length;
                     $(cart.products).each(function (index, products) {
                         var singleProduct = {};
@@ -20,41 +21,41 @@ class Cart {
                             type: "GET",
                             url: apiUrl + "products/" + products.productId,
                             success: function (product) {
-                                singleProduct['productId'] = product.id;
-                                singleProduct['productURL'] = "/producthtml?productid=" + product.id;
-                                singleProduct['title'] = product.title;
-                                singleProduct['price'] = product.price;
-                                singleProduct['image'] = product.image;
+                                singleProduct["productId"] = product.id;
+                                singleProduct["productURL"] = "/product.html?productid=" + product.id;
+                                singleProduct["title"] = product.title;
+                                singleProduct["price"] = product.price;
+                                singleProduct["image"] = product.image;
+                                singleProduct["qty"] = products.quantity;
                                 carts.push(singleProduct);
                                 localStorage.setItem("cart", JSON.stringify(carts));
                             },
                         });
                     });
+                    
                 });
-                localStorage.setItem("cartCount", count);
-                $("span.cartCount.badge").html(count);
+                // localStorage.setItem("cartCount", count);
+                // $("span.cartCount.badge").html(count);
             },
         });
     }
 
     getCartDisplay(products){
-        var price = 0;
+        var totalPrice = 0;
+        var count = 0;
         $(products).each(function (index, product){
-            price += product.price;
-            $(".cartDisplay").prepend(
-                '<li class="list-group-item d-flex justify-content-between lh-sm"><img src="' + product.image + '" class="img-thumbnail" style="max-width:50px;"><div><h6 class="my-0">' + product.title + '</h6></div><span class="text-muted">$' + product.price.toFixed(2) + "</span></li>"
-            )
+            console.log(product);
+            count += product.qty;
+            var price = product.qty * product.price;
+            totalPrice += price;
+            
+            $(".cartDisplay tbody").prepend(
+                '<tr><td><h6>' + product.qty + '</h6></td><td><a href="' + product.productURL + '"><img src="' + product.image + '" class="img-thumbnail" style="max-width:50px;"></a><td><h6>' + product.title + '</h6><small>' + product.price + '</small></td><td class="text-end"><span class="text-muted">$' + price.toFixed(2) + "</span></span></td>"
+            );
         });
-        $(".price").html(price);
-        /*
-        <li class="list-group-item d-flex justify-content-between lh-sm">
-                  <div>
-                    <h6 class="my-0">Product name</h6>
-                    <small class="text-muted">Brief description</small>
-                  </div>
-                  <span class="text-muted">$12</span>
-                </li>
-                */
+        $(".price").html(totalPrice);
+        localStorage.setItem("cartCount", count);
+        $("span.cartCount.badge").html(count);
         
     }
 }

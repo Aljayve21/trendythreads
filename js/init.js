@@ -6,6 +6,9 @@ $(function () {
     loadScript('js/products.js', productsSetup);
     loadScript('js/user.js', userInfo);
     loadScript('js/cart.js', cartInfo);
+    loadScript('js/wishlist.js', wishInfo);
+    loadScript('js/contact.js', contactInfo);
+    loadScript('js/about.js', aboutInfo);
 });
 
 $.get('/templates/navigation.html', function (data){
@@ -69,10 +72,10 @@ var cartInfo = function() {
     if(localStorage.getItem("user") != null){
         var user = JSON.parse(localStorage.user);
         cart.getCart(user.id);
-        if(localStorage.getItem("cartCount") != 0) {
+        setTimeout(() => {
             var cartItems = JSON.parse(localStorage.getItem("cart"));
             cart.getCartDisplay(cartItems);
-        }
+        }, 1000);
     }
 }
 

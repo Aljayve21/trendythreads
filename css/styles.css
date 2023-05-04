@@ -80,13 +80,3 @@ a :visited {
 .product :hover > .info {
   opacity: 1;
 }
-
-.cartDisplay div {
-  width: 75%;
-}
-.cartDisplay div h6 {
-  text-align: left;
-}
-.cartDisplay img {
-  margin-right: 1rem;
-}
